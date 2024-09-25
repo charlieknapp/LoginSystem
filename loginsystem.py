@@ -3,7 +3,7 @@ database = {}
 
 try:
   f = open("database.txt", "r")
-  inventory = eval(f.read())
+  database = eval(f.read())
   f.close()
 except:
   f = open("database.txt", "w")
