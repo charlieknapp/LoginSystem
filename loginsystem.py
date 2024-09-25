@@ -1,4 +1,4 @@
-import os, time, random
+import os, time, random, hashlib
 database = {}
 
 try:
@@ -9,7 +9,8 @@ except:
   f = open("database.txt", "w")
   f.close()
 
-
+def hash_password(password, salt):
+    return hashlib.sha256(f"{password}{salt}".encode()).hexdigest()
 
 def createUser():
   time.sleep(1)
@@ -21,10 +22,9 @@ def createUser():
     return
 
   salt = random.randint(1000, 9999)
-  newPassword = f"{password}{salt}"
-  newPassword = hash(newPassword)
+  hash = hash_password(password,salt)
   
-  database[username] = {"password": newPassword, "salt": salt}
+  database[username] = {"password": hash, "salt": salt}
 
   print("User added")
 
@@ -38,10 +38,10 @@ def login():
     return
 
   salt = database[username]["salt"]
-  newPassword = f"{password}{salt}"
-  newPassword = hash(newPassword)
+  hash = hash_password(password,salt)
+  
 
-  if database[username]["password"]==newPassword:
+  if database[username]["password"]==hash:
     print("Logged in")
   else:
     print("Username or password incorrect")
@@ -58,4 +58,6 @@ while True:
   f = open("database.txt", "w")
   f.write(str(database))
   f.close()  
+
+
 
